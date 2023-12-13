@@ -1,4 +1,14 @@
 import pygame
+import math
+
+
+def round_up_to_1000(number):
+    return math.ceil(number / 1000) * 1000
+
+
+def round_down_to_1000(number):
+    return math.floor(number / 1000) * 1000
+
 
 time = pygame.time.Clock()
 
@@ -11,53 +21,96 @@ pygame.display.set_caption("Maverick")  # Имя приложения
 master_music = pygame.mixer.Sound('resource/sound/Into_Eternity.mp3')  # Мелодия
 master_music.play()
 bg = pygame.image.load('resource/BG.jpeg')
-player_stay = pygame.image.load('resource/person/walk_left/person_1.png')
+player_stay = pygame.image.load('resource/person/walk_right/person_1.png')
+
 player_walk_right = [
+
+    pygame.image.load('resource/person/walk_right/person_3.png'),
+    pygame.image.load('resource/person/walk_right/person_2.png'),
+    pygame.image.load('resource/person/walk_right/person_2.png'),
+    pygame.image.load('resource/person/walk_right/person_1.png'),
+    pygame.image.load('resource/person/walk_right/person_1.png'),
+    pygame.image.load('resource/person/walk_right/person_2.png'),
+    pygame.image.load('resource/person/walk_right/person_2.png'),
+    pygame.image.load('resource/person/walk_right/person_3.png'),
+    pygame.image.load('resource/person/walk_right/person_3.png'),
+    pygame.image.load('resource/person/walk_right/person_4.png'),
+    pygame.image.load('resource/person/walk_right/person_4.png'),
+    pygame.image.load('resource/person/walk_right/person_5.png'),
+    pygame.image.load('resource/person/walk_right/person_5.png'),
+    pygame.image.load('resource/person/walk_right/person_4.png'),
+    pygame.image.load('resource/person/walk_right/person_4.png'),
+    pygame.image.load('resource/person/walk_right/person_3.png'),
+
+]
+
+player_walk_left = [
+
     pygame.image.load('resource/person/walk_left/person_3.png'),
+    pygame.image.load('resource/person/walk_left/person_2.png'),
     pygame.image.load('resource/person/walk_left/person_2.png'),
     pygame.image.load('resource/person/walk_left/person_1.png'),
+    pygame.image.load('resource/person/walk_left/person_1.png'),
+    pygame.image.load('resource/person/walk_left/person_2.png'),
     pygame.image.load('resource/person/walk_left/person_2.png'),
     pygame.image.load('resource/person/walk_left/person_3.png'),
+    pygame.image.load('resource/person/walk_left/person_3.png'),
+    pygame.image.load('resource/person/walk_left/person_4.png'),
     pygame.image.load('resource/person/walk_left/person_4.png'),
     pygame.image.load('resource/person/walk_left/person_5.png'),
+    pygame.image.load('resource/person/walk_left/person_5.png'),
+    pygame.image.load('resource/person/walk_left/person_4.png'),
     pygame.image.load('resource/person/walk_left/person_4.png'),
     pygame.image.load('resource/person/walk_left/person_3.png'),
+
 ]
 player_walk = 0
 player_speed = 30
-player_x = 120
+player_x = 200
+player_y = 250
 
 bg_x = 0
-screen_walk = 0 # Счётчик пройденных экранов
 game = True
 while game:
-    time.tick(5)
+    time.tick(20)
     ''' Задний фон'''
     screen.blit(bg, (bg_x, 0))
-    # screen.blit(bg, (bg_x + 1000, 0))
-    # bg_x -= 10  # движение второго задника
-    # if bg_x <= -1000:
-    #     bg_x = 0
-    #     screen_walk += 1
-    # if screen_walk == 3:
-    #     print("End Level!")
-    #     game = False
+    screen.blit(bg, (bg_x - 1000, 0))  # движение второго задника
+    screen.blit(bg, (bg_x + 1000, 0))  # движение второго задника
 
     ''' Персонаж и анимация'''
-    player_walk += 1
-    if player_walk == 9:
-        player_walk = 0
-
-
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_a]:
-        screen.blit(player_walk_right[player_walk], (player_x, 250))
-        player_x -= player_speed
-    elif keys[pygame.K_d]:
-        screen.blit(player_walk_right[player_walk], (player_x, 250))
-        player_x += player_speed
+    if keys[pygame.K_a]:  # Влево
+        bg_x += 7
+
+        screen.blit(player_walk_left[player_walk], (player_x, player_y))
+        player_walk += 1
+        if player_walk == 16:
+            player_walk = 0
+
+    elif keys[pygame.K_d]:  # Вправо
+        bg_x -= 7
+
+        screen.blit(player_walk_right[player_walk], (player_x, player_y))
+        player_walk += 1
+        if player_walk == 16:
+            player_walk = 0
+
+    elif keys[pygame.K_SPACE]:
+        screen.blit(player_stay, (300, 230))
+        screen.blit(player_stay, (300, 210))
+        screen.blit(player_stay, (300, 180))
+        screen.blit(player_stay, (300, 210))
+        screen.blit(player_stay, (300, 230))
+
     else:
-        screen.blit(player_stay, (player_x, 250))
+        screen.blit(player_stay, (player_x, player_y))
+
+    if bg_x >= 1000 or bg_x <= -1000:
+        bg_x = 0
+
+    ''' Экран '''
+    pygame.display.update()  # Обновление экрана
 
     ''' Работа с событиями'''
     # Выход из игры
@@ -66,8 +119,4 @@ while game:
             game = False
             pygame.quit()  # Выход из приложения
 
-    ''' Экран '''
-    pygame.display.update()  # Обновление экрана
-
     ''' Прочее '''
-
